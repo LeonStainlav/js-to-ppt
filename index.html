@@ -3,330 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart JS to PPTX Converter (Offline & Aman)</title>
-    
-    <meta name="description" content="Konversi file JavaScript (.js) menjadi file presentasi PowerPoint (.pptx) secara instan, aman, dan langsung di browser Anda tanpa upload ke server.">
-    <meta name="keywords" content="js to pptx, convert javascript to powerpoint, ubah js ke ppt, converter kode ke presentasi">
-    <meta name="robots" content="index, follow">
-
+    <title>Universal JS to PPTX Sandbox (Fixed)</title>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/PptxGenJS@3.12.0/dist/pptxgen.bundle.js"></script>
-
     <style>
-        :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --primary: #3b82f6; /* Mengubah aksen menjadi biru khas JavaScript/Tech */
-            --primary-hover: #2563eb;
-            --success: #10b981;
-            --error: #ef4444;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --saweria: #fa9c1b;
-            --saweria-hover: #e0850b;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .running-text {
-            width: 100%;
-            max-width: 650px;
-            overflow: hidden;
-            white-space: nowrap;
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 20px;
-            background: #1e293b;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .running-text span {
-            display: inline-block;
-            padding-left: 100%;
-            animation: marquee 15s linear infinite;
-        }
-
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
-        }
-
-        .container {
-            background-color: var(--bg-card);
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 650px;
-            text-align: center;
-            border: 1px solid #334155;
-        }
-
-        h2 { font-size: 28px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: -0.5px; }
-        p.subtitle { color: var(--text-muted); margin: 0 0 32px 0; font-size: 14px; }
-        
-        .drop-zone {
-            border: 2px dashed #475569;
-            border-radius: 14px;
-            padding: 50px 20px;
-            cursor: pointer;
-            background-color: #111827;
-            transition: all 0.25s ease;
-        }
-        .drop-zone:hover {
-            border-color: var(--primary);
-            background-color: #121e36;
-            transform: scale(1.01);
-        }
-        .drop-zone.drag-over {
-            border-color: var(--success);
-            background-color: #064e3b;
-        }
-        .drop-zone svg { width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px; transition: transform 0.3s ease; }
-        .drop-zone:hover svg { color: var(--primary); transform: translateY(-5px); }
-        .drop-zone p { margin: 0; font-size: 16px; font-weight: 500; color: #e2e8f0; }
-        .drop-zone span { display: block; font-size: 13px; color: var(--text-muted); margin-top: 8px; }
-        
-        #file-input { display: none; }
-        
-        #status-container {
-            margin-top: 25px;
-            text-align: left;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .status-item {
-            padding: 16px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            background-color: #111827;
-            border-left: 4px solid #475569;
-        }
-        
-        .status-working { border-left-color: var(--primary); }
-        .status-success { border-left-color: var(--success); }
-        .status-error { border-left-color: var(--error); }
-
-        .status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .file-info { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%; }
-        .badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; }
-        
-        .status-working .badge { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
-        .status-success .badge { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-error .badge { background: rgba(239, 68, 68, 0.2); color: var(--error); }
-
-        .progress-track { width: 100%; height: 6px; background: #334155; border-radius: 10px; overflow: hidden; margin-top: 8px; }
-        .progress-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.2s ease; }
-        .status-success .progress-fill { background: var(--success); width: 100% !important; }
-
-        .donation-box {
-            margin-top: 30px;
-            padding: 20px;
-            background: #111827;
-            border-radius: 14px;
-            border: 1px solid #1e293b;
-        }
-        .donation-box p { font-size: 13px; color: var(--text-muted); margin: 0 0 12px 0; }
-        .btn-saweria {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--saweria);
-            color: #ffffff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 4px 10px rgba(250, 156, 27, 0.2);
-            transition: all 0.2s ease;
-        }
-        .btn-saweria:hover {
-            background-color: var(--saweria-hover);
-            box-shadow: 0 6px 15px rgba(250, 156, 27, 0.3);
-            transform: translateY(-1px);
-        }
-        .btn-saweria svg { width: 16px; height: 16px; fill: currentColor; }
-        
-        #smile-emoji { display: none; font-size: 24px; margin-left: 10px; }
+        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: var(--card); padding: 2rem; border-radius: 1rem; width: 100%; max-width: 800px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        h1 { color: var(--primary); margin-top: 0; }
+        .drop-zone { border: 2px dashed #475569; padding: 40px; text-align: center; border-radius: 0.5rem; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
+        .drop-zone:hover { border-color: var(--primary); background: #1e293b; }
+        #status { margin-top: 20px; padding: 15px; border-radius: 0.5rem; display: none; font-size: 14px; }
+        .success { background: #065f46; color: #34d399; }
+        .error { background: #7f1d1d; color: #fca5a5; }
+        .log-area { background: #000; color: #10b981; font-family: monospace; padding: 10px; border-radius: 4px; height: 180px; overflow-y: auto; margin-top: 10px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div class="running-text">
-    <span>✨ Selamat datang di Smart JS to PPTX Converter! Ubah file kode JavaScript Anda menjadi presentasi PowerPoint secara instan & aman! ✨ Dukung server kami via Saweria! ✨</span>
-</div>
-
 <div class="container">
-    <h2>Smart JS to PPTX Converter</h2>
-    <p class="subtitle">Aman & Offline ➜ File diproses langsung di browser Anda</p>
+    <h1>JS to PPTX Converter</h1>
+    <p style="color: #94a3b8">Upload file <code>.js</code> yang menggunakan PptxGenJS.</p>
     
-    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-        <p>Seret & lepaskan file JavaScript (.js) ke sini</p>
-        <span>atau klik untuk memilih file dari komputer</span>
+    <div class="drop-zone" id="dropZone">
+        <p id="fileName">Tarik file .js ke sini atau klik untuk pilih file</p>
+        <input type="file" id="fileInput" accept=".js" style="display: none">
     </div>
-    <input type="file" id="file-input" multiple accept=".js">
-    
-    <div id="status-container"></div>
 
-    <div class="donation-box">
-        <p>Web ini membantu Anda? Dukung kelangsungan server dengan segelas kopi digital: <span id="smile-emoji">😊</span></p>
-        <a href="https://saweria.co/LeonStainlav" target="_blank" class="btn-saweria" id="saweria-btn">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 21h18v-2H2v2M20 8h-2V5h2v3m0-5h-4v7h4a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3M4 19h10c1.1 0 2-.9 2-2V5H2v12c0 1.1.9 2 2 2Z"/>
-            </svg>
-            Dukung via Saweria
-        </a>
-    </div>
+    <button id="convertBtn" style="width: 100%; padding: 12px; background: var(--primary); border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer;">
+        PROSES & GENERATE PPTX
+    </button>
+
+    <div id="status"></div>
+    <div class="log-area" id="logArea">System Ready...</div>
 </div>
-
-<audio id="hover-sound" src="https://videotourl.com/audio/1780611581964-32e93e44-3f5b-44a4-8c75-da0606b461b3.mp3" preload="auto"></audio>
-<audio id="saweria-sound" src="https://videotourl.com/audio/1780612039532-6ded5d96-1883-439e-8221-a4a64f4f1c31.mp3" preload="auto"></audio>
 
 <script>
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const statusContainer = document.getElementById('status-container');
-    const hoverSound = document.getElementById('hover-sound');
-    const saweriaSound = document.getElementById('saweria-sound');
-    const saweriaBtn = document.getElementById('saweria-btn');
-    const smileEmoji = document.getElementById('smile-emoji');
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const convertBtn = document.getElementById('convertBtn');
+    const status = document.getElementById('status');
+    const logArea = document.getElementById('logArea');
 
-    dropZone.addEventListener('mouseenter', () => {
-        hoverSound.currentTime = 0;
-        hoverSound.play().catch(e => console.log("Menunggu interaksi pengguna..."));
-    });
+    let uploadedCode = "";
+    let currentFileName = "presentation.pptx";
 
-    saweriaBtn.addEventListener('click', () => {
-        saweriaSound.currentTime = 0;
-        saweriaSound.play();
-        smileEmoji.style.display = 'inline';
-    });
-
-    ['dragenter', 'dragover'].forEach(name => {
-        dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); }, false);
-    });
-    ['dragleave', 'drop'].forEach(name => {
-        dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); }, false);
-    });
-
-    dropZone.addEventListener('drop', (e) => { handleFiles(e.dataTransfer.files); });
-    fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
-
-    function handleFiles(files) {
-        for (let file of files) {
-            if (file.name.toLowerCase().endsWith('.js')) {
-                processJsToPptx(file);
-            } else {
-                alert("Mohon masukkan file berformat .js (JavaScript) saja!");
-            }
+    // MOCKING ENVIRONMENT
+    const windowMock = {
+        require: function(module) {
+            log(`System bypassing node module: ${module}`);
+            if (module.includes('pptxgenjs')) return PptxGenJS;
+            return {}; // Return object kosong untuk react, sharp, dll agar tidak crash
+        },
+        console: {
+            log: (m) => log(`Code Log: ${m}`),
+            error: (m) => log(`Code Error: ${m}`)
         }
+    };
+
+    function log(msg) {
+        const div = document.createElement('div');
+        div.textContent = `> ${msg}`;
+        logArea.appendChild(div);
+        logArea.scrollTop = logArea.scrollHeight;
     }
 
-    function processJsToPptx(file) {
-        const fileId = 'js-' + Math.random().toString(36).substr(2, 9);
-        const cleanName = file.name.replace(/\.js$/i, '');
-        
-        const card = document.createElement('div');
-        card.className = 'status-item status-working';
-        card.id = fileId;
-        card.innerHTML = `
-            <div class="status-header">
-                <div class="file-info">${file.name}</div>
-                <div class="badge" id="badge-${fileId}">Membaca...</div>
-            </div>
-            <div class="progress-track"><div class="progress-fill" id="progress-${fileId}"></div></div>
-        `;
-        statusContainer.insertBefore(card, statusContainer.firstChild);
+    dropZone.onclick = () => fileInput.click();
 
-        const progressBar = document.getElementById(`progress-${fileId}`);
-        const badge = document.getElementById(`badge-${fileId}`);
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    };
 
-        const fileReader = new FileReader();
-        fileReader.onload = function () {
-            try {
-                const textContent = this.result;
-                const lines = textContent.split('\n');
-                
-                // Menginisialisasi PptxGenJS
-                const pptx = new PptxGenJS();
-                pptx.layout = 'LAYOUT_16x9'; // Menggunakan format widescreen modern
-
-                // Pembagian baris kode pintar (Max 25 baris per slide agar tidak overflow)
-                const linesPerSlide = 25;
-                const totalSlides = Math.ceil(lines.length / linesPerSlide);
-
-                for (let i = 0; i < totalSlides; i++) {
-                    badge.innerText = `Membuat Slide ${i + 1} / ${totalSlides}`;
-                    
-                    const slide = pptx.addSlide();
-                    
-                    // Set background warna gelap estetik ala code editor pada slide
-                    slide.background = { fill: '1E1E1E' }; 
-
-                    // Menentukan potongan baris kode untuk slide saat ini
-                    const startLine = i * linesPerSlide;
-                    const endLine = Math.min(startLine + linesPerSlide, lines.length);
-                    const codeChunk = lines.slice(startLine, endLine).join('\n');
-
-                    // Menambahkan Judul Slide Informasi File
-                    slide.addText(`${file.name} - Bagian ${i + 1}`, {
-                        x: 0.5, y: 0.3, w: '90%', h: 0.4,
-                        fontSize: 14, color: '94A3B8', fontFace: 'Segoe UI', bold: true
-                    });
-
-                    // Menambahkan isi kode JavaScript ke dalam slide
-                    slide.addText(codeChunk, {
-                        x: 0.5, y: 0.8, w: 12.3, h: 6.2,
-                        fontSize: 11,
-                        color: 'D4D4D4', // Warna teks abu-abu terang (Standard VS Code)
-                        fontFace: 'Courier New', // Font Monospace khusus kode
-                        valign: 'top',
-                        wrap: true
-                    });
-
-                    let percent = Math.round(((i + 1) / totalSlides) * 100);
-                    progressBar.style.width = percent + '%';
-                }
-
-                badge.innerText = "Mengunduh PPTX...";
-                
-                // Menyimpan dan memicu download file presentasi (.pptx)
-                pptx.writeFile({ fileName: `${cleanName}_Presentation.pptx` }).then(() => {
-                    card.className = 'status-item status-success';
-                    badge.innerText = 'Sukses (.PPTX)';
-                }).catch(err => {
-                    throw new Error(err);
-                });
-
-            } catch (error) {
-                card.className = 'status-item status-error';
-                badge.innerText = 'Gagal Mengonversi';
-                progressBar.style.backgroundColor = 'var(--error)';
-                console.error(error);
-            }
+    function handleFile(file) {
+        document.getElementById('fileName').textContent = file.name;
+        currentFileName = file.name.replace('.js', '.pptx');
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            uploadedCode = e.target.result;
+            log(`File ${file.name} loaded.`);
         };
-        
-        fileReader.readAsText(file);
+        reader.readAsText(file);
     }
-</script>
 
+    convertBtn.onclick = async () => {
+        if (!uploadedCode) return alert("Upload file .js terlebih dahulu!");
+        
+        status.style.display = "block";
+        status.className = "";
+        status.textContent = "Sedang memproses...";
+        log("Starting conversion sandbox...");
+
+        try {
+            const require = windowMock.require;
+            
+            // Pembersihan kode pintar:
+            let cleanCode = uploadedCode
+                // 1. Matikan require-require Node.js bawaan script
+                .replace(/const\s+.*?\s*=\s*require\(.*?\);/g, (match) => {
+                    if (match.includes('pptxgenjs')) return 'const pptxgen = PptxGenJS;';
+                    return `// Bypassed: ${match}`;
+                })
+                // 2. Matikan total fungsi iconPng asli agar tidak crash akibat sharp/react-dom
+                .replace(/async\s+function\s+iconPng[\s\S]*?\{\s*[\s\S]*?return[\s\S]*?\}/g, 
+                    `async function iconPng() { 
+                        // Mengembalikan gambar placeholder transparan berukuran 1x1 pixel
+                        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="; 
+                     }`
+                )
+                // 3. Ubah pres.writeFile agar mendownload langsung ke browser, bukan ke path linux (/mnt/...)
+                .replace(/await\s+pres\.writeFile\(\{[\s\S]*?\}\);/g, `await pres.writeFile({ fileName: "${currentFileName}" });`);
+
+            // Eksekusi kode secara dinamis di dalam sandbox browser
+            const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+            const executeCode = new AsyncFunction('PptxGenJS', 'require', cleanCode);
+            
+            await executeCode(PptxGenJS, require);
+
+            status.className = "success";
+            status.textContent = "Berhasil! File PPTX otomatis terdownload.";
+            log("Conversion Finished Successfully.");
+
+        } catch (err) {
+            console.error(err);
+            status.className = "error";
+            status.textContent = "Error: " + err.message;
+            log(`CRITICAL ERROR: ${err.message}`);
+        }
+    };
+</script>
 </body>
 </html>
