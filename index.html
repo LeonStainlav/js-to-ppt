@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart PPT Generator</title>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; padding: 50px; }
+        .container { background: #1e293b; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; text-align: center; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: none; box-sizing: border-box; }
+        button { background: #ec4899; color: white; padding: 12px 24px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #db2777; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Smart PPT Generator</h2>
+    <input type="text" id="judul" placeholder="Masukkan Judul Slide">
+    <textarea id="isi" rows="4" placeholder="Masukkan isi slide..."></textarea>
+    <button onclick="generatePPT()">Download .pptx</button>
+</div>
+
+<script>
+    function generatePPT() {
+        // 1. Ambil input dari user
+        const judul = document.getElementById('judul').value || "Judul Presentasi";
+        const isi = document.getElementById('isi').value || "Isi presentasi di sini...";
+
+        // 2. Inisialisasi PPTXGenJS
+        let pres = new PptxGenJS();
+        pres.layout = 'LAYOUT_16x9';
+
+        // 3. Buat Slide
+        let slide = pres.addSlide();
+        
+        // Tambahkan Judul
+        slide.addText(judul, { 
+            x: 0.5, y: 0.5, w: '90%', fontSize: 44, bold: true, color: '363636' 
+        });
+
+        // Tambahkan Isi
+        slide.addText(isi, { 
+            x: 0.5, y: 2.0, w: '90%', fontSize: 20, color: '363636' 
+        });
+
+        // 4. Export File
+        pres.writeFile({ fileName: 'Presentasi_Otomatis.pptx' });
+    }
+</script>
+
+</body>
+</html>
